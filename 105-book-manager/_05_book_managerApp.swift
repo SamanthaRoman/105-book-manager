@@ -10,23 +10,38 @@ import SwiftData
 
 @main
 struct _05_book_managerApp: App {
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(sharedModelContainer)
     }
 }
+
+
+/*
+ 
+ 
+ 
+ 
+ This code:
+ Image(systemName: "book)
+ 
+ is like us saying this...
+ View<Image>
+ 
+ Then we modify itlike this to add a green boarder:
+ Image(systemName: "book)
+ .border(.green)
+ 
+ Changes it to this within the code:
+ View<containerwithborder<image>>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ */
+ 
