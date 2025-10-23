@@ -8,21 +8,29 @@
 import SwiftUI
 
 struct DetailView: View {
+    
+    @Binding var book: Book
+    @State private var showEditSheet: Bool = false
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 HStack{
-                    Image("lotr_king")
+                    Image(book.image ?? "default-book-icon")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 100, height: 150)
                         .padding(.vertical, 20)
                     VStack{
                         Text("The fellowship of the ring")
-                            .font(.system(size: 36, weight: .bold, design: .serif))
-                        Text("by \("Author")") // by with a variable.
-                            .font(.headline)
-                            .foregroundColor(.secondary)
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .fontDesign(.serif)
+                        if (book.author != nil){
+                            Text("by \(book.author)")
+                                .font(.headline)
+                                .foregroundColor(.secondary)
+                        }
                     } // END VStack title and author
                 } // End Hstack Image and Title+Author VStack
                 VStack{
@@ -30,12 +38,21 @@ struct DetailView: View {
                     Spacer()
                     Text("Ne eirmod gubergren nam, ex justo nonumes vim, te veri philosophia eam. Mel tollit fuisset erroribus te, nam no dictas audire discere, eum modus disputationi et. Ea per case suavitate, eum semper consequat ut. Eu mei elitr oratio bonorum, eum alii timeam sadipscing cu. Impedit ceteros volutpat ne vim, mei cu graeco mediocrem.")
                 } // END VStack - Description paragraphs
+                Text(book.description ?? "No description")
             } // End VStack - housing the HStack
             .padding(.horizontal)
         }
+        .navigationTitle(book.title) //Sets a title
+        .navigationBarTitleDisplayMode(.inline) //Changes the title to be smaller
+        .navigationBarItems(trailing: Button("Edit", action: {
+            showEditSheet.toggle()
+        })) // sets a button on the top right corner with the text "edit"
+        .sheet(isPresented: $showEditSheet, content: {
+            AddEditBookView(book: $book)
+        }) // presents a sheet whenever "$showEditSheet" is "true"
     }
 }
 
-#Preview {
-    DetailView()
-}
+//#Preview {
+//    DetailView(book: $book)
+//}
