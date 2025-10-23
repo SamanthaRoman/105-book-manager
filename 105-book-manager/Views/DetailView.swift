@@ -16,29 +16,42 @@ struct DetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 HStack{
+                    // Coalescing operator >> ?? expects
                     Image(book.image ?? "default-book-icon")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 100, height: 150)
                         .padding(.vertical, 20)
                     VStack{
-                        Text("The fellowship of the ring")
+                        Text(book.title)
                             .font(.title)
                             .fontWeight(.bold)
                             .fontDesign(.serif)
-                        if (book.author != nil){
-                            Text("by \(book.author)")
+                        if(book.author != ""){
+                        Text("by \(book.author)")
                                 .font(.headline)
                                 .foregroundColor(.secondary)
                         }
                     } // END VStack title and author
                 } // End Hstack Image and Title+Author VStack
-                VStack{
-                    Text("Lorem ipsum dolor sit amet, nam ut harum ridens perpetua. Ne mea senserit percipitur, cu ferri corpora vel. Usu voluptua vivendum accommodare ut, pro ad malis essent expetendis, sed solet primis oportere ne. Sea pertinax petentium ex, ea debet discere sed. Ubique possim in sea.")
-                    Spacer()
-                    Text("Ne eirmod gubergren nam, ex justo nonumes vim, te veri philosophia eam. Mel tollit fuisset erroribus te, nam no dictas audire discere, eum modus disputationi et. Ea per case suavitate, eum semper consequat ut. Eu mei elitr oratio bonorum, eum alii timeam sadipscing cu. Impedit ceteros volutpat ne vim, mei cu graeco mediocrem.")
-                } // END VStack - Description paragraphs
-                Text(book.description ?? "No description")
+                // pass down a custom capsul where the text is equel to the reading status raw value (the value we have set in the reading status model enum.
+                HStack{
+                    CustomCapsule(text: book.readingStatus.rawValue)
+                    CustomCapsule(text: book.genre.rawValue, color: .secondary.opacity(0.3))
+                }
+    
+                Text(book.description != "" ? book.description : "No description")
+                
+                
+                // if statement:
+                // ig the book has a review that doesn't equal an empty string or the rating doesn't equal zero we can then present a text saying "review"
+                // depending if it is more than 1 we put stars if not just one star.
+                // logic >> check ? do this : do that
+                if (book.review != "" || book.rating > 0){
+                    // rating is a complete string using a backslash so the rating is converted into a string so between these variables we are using a turnarar vaiable if its rating is grater than 1 we put stars if less we put just one star.
+                    Text("Rating: \(book.rating) \(book.rating > 1 ? "stars" : "star")")
+                }
+                Text(book.review != "" ? book.review: "No review yet")
             } // End VStack - housing the HStack
             .padding(.horizontal)
         }
