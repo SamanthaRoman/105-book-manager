@@ -47,15 +47,19 @@ struct DetailView: View {
                 // ig the book has a review that doesn't equal an empty string or the rating doesn't equal zero we can then present a text saying "review"
                 // depending if it is more than 1 we put stars if not just one star.
                 // logic >> check ? do this : do that
-                if (book.review != "" || book.rating > 0){
-                    // rating is a complete string using a backslash so the rating is converted into a string so between these variables we are using a turnarar vaiable if its rating is grater than 1 we put stars if less we put just one star.
-                    Text("Rating: \(book.rating) \(book.rating > 1 ? "stars" : "star")")
-                }
-                Text(book.review != "" ? book.review: "No review yet")
+                if(book.review != "" || book.rating > 0){
+                    Text("My Review").font(.title3)
+                    if(book.rating > 0){
+                        // rating is a complete string using a backslash so the rating is converted into a string so between these variables we are using a turnarar vaiable if its rating is grater than 1 we put stars if less we put just one star.
+                        Text("Rating: \(book.rating) \(book.rating > 1 ? "stars" : "star")")
+                    }
+                    Text(book.review != "" ? book.review: "No review yet")
+                } // END if book review
+
             } // End VStack - housing the HStack
             .padding(.horizontal)
         }
-        .navigationTitle(book.title) //Sets a title
+        .navigationTitle("Details") //Sets a title
         .navigationBarTitleDisplayMode(.inline) //Changes the title to be smaller
         .navigationBarItems(trailing: Button("Edit", action: {
             showEditSheet.toggle()
