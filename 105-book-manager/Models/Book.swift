@@ -7,16 +7,15 @@
 
 import Foundation
 
-struct Book: Identifiable {
-    let id = UUID() // for uuid to be in scope import foundation
+struct Book: Identifiable, Codable, Equatable {
+    let id = UUID()
     var title: String
     var author: String = ""
-    var image: String = "default-book-icon"
-    var description: String = "" // it could be nil because it ends with ?
+    var image: String = "default_book"
+    var description: String = "" //it could be Nil because it ends with ?
+    var genre: Genre = .unknown
     var rating: Int = 0
     var review: String = ""
-    // var readingStatus: String = "To Read" // Could be any string so we change it insetad of string to send an enumeration of strings
-    var readingStatus: ReadingStatus = .unkown
-    var genre: Genre = .unkown
+    var readingStatus: ReadingStatus = .unknown
     var isFavorite: Bool = false
 }

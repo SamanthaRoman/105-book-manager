@@ -5,20 +5,39 @@
 //  Created by Jorge Gabriel Marin Urias on 10/25/25.
 //
 import SwiftUI
+
 struct BookListView: View {
     
     @Binding var books: [Book]
     @State var showAddSheet = false
     @State var newBook: Book = Book(title:"")
     
+    @State var showFilterSheet: Bool = false
+    @State var selectedGenre: Genre?
+    @State var selectedReadingStatus: ReadingStatus?
+    
+    // Computed Variable
+    private var filteredBooks: [Binding<Book>] {
+        $books.filter {
+            (
+                selectedGenre == nil
+                || $0.wrappedValue.genre == selectedGenre
+            )
+            && (
+                selectedReadingStatus == nil
+                || $0.wrappedValue.readingStatus == selectedReadingStatus
+            )
+        }
+    }
+    
     var body: some View {
         NavigationStack {
-            List($books, id: \.self.id) { $book in
+            List(filteredBooks, id: \.self.id) { $book in
                 // Each book will display the following:
                 NavigationLink(destination: DetailView(book: $book)){
-                    BookListItem(book: book)
-                } // END nav link destinatin action
-            } // End List if statement for nav stack
+                    BookListItem(bookInList: book)
+                }
+            }
             .navigationBarTitle("Book Manager")
             .navigationBarItems(trailing: Button("Add", action: {
                 showAddSheet.toggle()
@@ -30,7 +49,21 @@ struct BookListView: View {
                 }
                 newBook = Book(title:"")
             } content: {
-                AddEditBookView(book: $newBook) // book binds to addbookview
+                AddEditBookView(book: $newBook)
+            }
+            .toolbar{
+                ToolbarItem(placement: .topBarLeading){
+                    FilterButton(action:{ showFilterSheet.toggle()
+                    })
+                }
+            }
+            .sheet(isPresented: $showFilterSheet){
+                //onDismiss
+            } content: {
+                FiltersView(
+                    selectedGenre: $selectedGenre,
+                    selectedReadingStatus: $selectedReadingStatus
+                )
             }
         }
     }

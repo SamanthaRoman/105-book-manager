@@ -5,6 +5,7 @@
 //  Created by Jorge Gabriel Marin Urias on 10/25/25.
 //
 import SwiftUI
+
 struct FavoriteToggle: View {
     @Binding var isFavorite: Bool
     @State private var opacity: CGFloat = 0

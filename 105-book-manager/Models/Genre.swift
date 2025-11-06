@@ -5,15 +5,13 @@
 //  Created by Samantha Roman on 10/22/25.
 //
 
-import Foundation
-
-enum Genre: String, CaseIterable {
-    
-    case mystery = "Mystery"
-    case thriller = "Thriller"
+enum Genre: String, CaseIterable, Codable {
+    case classic = "Classic"
+    case fantasy = "Fantasy"
+    case scienceFiction = "Science Fiction"
     case romance = "Romance"
-    case fiction = "Fiction"
-    case nonfiction = "Non-Fiction"
-    case unkown = "Unkown Genre"
-    
+    case horror = "Horror"
+    case dystopian = "Dystopian"
+    // Base case
+    case unknown = "Unknown"
 }

@@ -5,26 +5,28 @@
 //  Created by Samantha Roman on 10/22/25.
 
 
-//
-//Text("write this text")
-// Capsule("Write this text", Color.accentColor)
+
+// Text("write this text")
+// Capsule("write this text", Color.accentColor)
 
 import SwiftUI
+
 struct CustomCapsule: View {
     
     let text: String
-    var color: Color = .accentColor.opacity(0.5)
+    var color: Color
     
-    
+    init(_ text:String, color: Color = .accentColor.opacity(0.5)){
+        self.text = text
+        self.color = color
+    }
     
     var body: some View {
-        
         Text(text)
             .font(.caption)
             .fontWeight(.bold)
             .padding(8)
-            .background(color) // background to be the color we will pass down
+            .background(color)
             .clipShape(Capsule())
-        
     }
 }

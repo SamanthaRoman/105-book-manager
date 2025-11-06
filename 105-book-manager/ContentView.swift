@@ -6,9 +6,31 @@
 //
 import SwiftUI
 import SwiftData
+
 struct ContentView: View {
+    @AppStorage(SETTINGS_THEME_KEY) var theme: Theme = SETTINGS_THEME_DEFAULT_VALUE
+    @AppStorage(SETTINGS_ACCENT_COLOR_KEY) private var accentTintColor: Color = SETTINGS_ACCENT_COLOR_DEFAULT_VALUE
     
     @State var books: [Book] = getBooks()
+    
+    // We want to test that when a book does not have a title we see an error,
+    
+    // We want to test that when tehre only title we can render the app
+    
+    // We want to test when there is no image, and you show the default
+
+    // Computed property
+    var colorScheme: ColorScheme? {
+        switch(theme) {
+        case .light:
+            return .light
+        case .dark:
+            return .dark
+        case .system:
+            return nil
+        }
+    }
+    
     var body: some View {
         TabView {
             BookListView(books: $books)
@@ -19,13 +41,23 @@ struct ContentView: View {
                 .tabItem {
                     Label("Favorites", systemImage: "heart.fill")
                 }
+            SettingsView()
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
+                }
                 
         }
+        .preferredColorScheme(colorScheme)
+        //add this only if time to add the color
+        .tint(accentTintColor)
     }
 }
+
 #Preview {
     ContentView()
 }
+
+
 
 
 

@@ -16,60 +16,48 @@ struct DetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 HStack{
-                    // Coalescing operator >> ?? expects
-                    Image(book.image ?? "default-book-icon")
+                    // Coalescing operator (??) if left side is Nil do the right side
+                    Image(book.image)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 100, height: 150)
                         .padding(.vertical, 20)
                     VStack{
-                        Text(book.title)
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .fontDesign(.serif)
+                        Text("\(book.title)")
+                            .font(.system(size: 36, weight: .bold, design: .serif))
                         if(book.author != ""){
-                        Text("by \(book.author)")
+                            Text("by \(book.author)")
                                 .font(.headline)
                                 .foregroundColor(.secondary)
                         }
-                    } // END VStack title and author
-                } // End Hstack Image and Title+Author VStack
-                // pass down a custom capsul where the text is equel to the reading status raw value (the value we have set in the reading status model enum.
-                HStack{
-                    CustomCapsule(text: book.readingStatus.rawValue)
-                    CustomCapsule(text: book.genre.rawValue, color: .secondary.opacity(0.3))
+                    }
                 }
-    
+                HStack{
+                    CustomCapsule(book.genre.rawValue, color: .secondary.opacity(0.3))
+                    CustomCapsule(book.readingStatus.rawValue)
+                    Spacer()
+                    FavoriteToggle(isFavorite: $book.isFavorite)
+                }
                 Text(book.description != "" ? book.description : "No description")
-                
-                
-                // if statement:
-                // ig the book has a review that doesn't equal an empty string or the rating doesn't equal zero we can then present a text saying "review"
-                // depending if it is more than 1 we put stars if not just one star.
-                // logic >> check ? do this : do that
+                // Ternary operator (? :) if logical check is True, do after "?" else do after the ":"
+                // logical check ? do_this : do_that
                 if(book.review != "" || book.rating > 0){
                     Text("My Review").font(.title3)
                     if(book.rating > 0){
-                        // rating is a complete string using a backslash so the rating is converted into a string so between these variables we are using a turnarar vaiable if its rating is grater than 1 we put stars if less we put just one star.
-                        Text("Rating: \(book.rating) \(book.rating > 1 ? "stars" : "star")")
+                        Text("Rating: \(book.rating) \( book.rating > 1 ? "stars" : "star")")
                     }
-                    Text(book.review != "" ? book.review: "No review yet")
-                } // END if book review
-
-            } // End VStack - housing the HStack
+                    Text(book.review != "" ? book.review : "No review yet")
+                }
+            }
             .padding(.horizontal)
         }
         .navigationTitle("Details") //Sets a title
-        .navigationBarTitleDisplayMode(.inline) //Changes the title to be smaller
+        .navigationBarTitleDisplayMode(.inline) // Changes the title to be smaller
         .navigationBarItems(trailing: Button("Edit", action: {
             showEditSheet.toggle()
-        })) // sets a button on the top right corner with the text "edit"
+        }))// sets a button on the top right corner with the text "Edit"
         .sheet(isPresented: $showEditSheet, content: {
             AddEditBookView(book: $book)
-        }) // presents a sheet whenever "$showEditSheet" is "true"
+        })  // presents a sheet whenever "$showEditSheet" is "true"
     }
 }
-
-//#Preview {
-//    DetailView(book: $book)
-//}
