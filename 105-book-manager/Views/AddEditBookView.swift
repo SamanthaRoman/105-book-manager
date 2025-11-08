@@ -6,18 +6,19 @@
 //
 
 import SwiftUI
+import Foundation
+import SwiftData
 
 struct AddEditBookView: View {
-    @Binding var book: Book
-    @State private var workingBook: Book
+    @StateObject private var viewModel: AddEditBookViewModel
     
     @Environment(\.dismiss) var dismiss
+//    @State private var workingBook: Book
     
-    init(book: Binding<Book>) {
-        self._book = book
-        self._workingBook = .init(initialValue: book.wrappedValue)
+    init(book: PersistentBook? = nil, modelContext: ModelContext){
+        _viewModel = StateObject(wrappedValue: AddEditBookViewModel(book:book, modelContext: modelContext))
     }
-    
+
     var body: some View {
         NavigationStack{
             ZStack {
@@ -33,33 +34,34 @@ struct AddEditBookView: View {
                 )
                 Form {
                     Section(header: Text("Book Details")) {
-                        TextField("Title of the book", text: $workingBook.title)
-                        TextField("Author", text: $workingBook.author)
-                        TextEditor(text: $workingBook.description)
+                        TextField("Title of the book", text: $viewModel.title)
+                        TextField("Author", text: $viewModel.author)
+                        TextEditor(text: $viewModel.summary)
                             .frame(height:100)
-                        Picker("Genre", selection: $workingBook.genre){
+                        Picker("Genre", selection: $viewModel.genre){
                             ForEach(Genre.allCases, id: \.self){ genre in
                                 Text(genre.rawValue).tag(genre)
                             }
                         }
                     }
                     Section(header: Text("Review")){
-                        Picker("Rating", selection: $workingBook.rating){
+                        Picker("Rating", selection: $viewModel.rating){
                             Text("Not rated yet").tag(0)
                             ForEach(1...5, id: \.self){ i in
                                 Text("\(i)").tag(i)
                             }
                         }
-                        TextEditor(text: $workingBook.review)
+                        TextEditor(text: $viewModel.review)
                             .frame(height:100)
-                        Picker("Reading status", selection: $workingBook.readingStatus){
+                        Picker("Reading status", selection: $viewModel.readingStatus){
                             ForEach(ReadingStatus.allCases, id: \.self){ status in
                                 Text(status.rawValue).tag(status)
                             }
                         }
                     }
                 }
-                .navigationTitle(book.title.isEmpty ?"Add book":"Edit book")
+                .navigationTitle(viewModel.sheetTitle)
+                
                 .toolbar{
                     ToolbarItem(placement: .cancellationAction){
                         Button("Cancel"){
@@ -68,15 +70,9 @@ struct AddEditBookView: View {
                     }
                     ToolbarItem(placement: .confirmationAction){
                         Button("Save"){
-                            book.title = workingBook.title
-                            book.author = workingBook.author
-                            book.description = workingBook.description
-                            book.genre = workingBook.genre
-                            book.rating = workingBook.rating
-                            book.review = workingBook.review
-                            book.readingStatus = workingBook.readingStatus
+                            viewModel.save()
                             dismiss()
-                        }.disabled(workingBook.title.isEmpty)
+                        }.disabled(viewModel.title.isEmpty)
                     }
                 }
             }

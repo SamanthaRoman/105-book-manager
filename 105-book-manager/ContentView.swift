@@ -11,7 +11,7 @@ struct ContentView: View {
     @AppStorage(SETTINGS_THEME_KEY) var theme: Theme = SETTINGS_THEME_DEFAULT_VALUE
     @AppStorage(SETTINGS_ACCENT_COLOR_KEY) private var accentTintColor: Color = SETTINGS_ACCENT_COLOR_DEFAULT_VALUE
     
-    @State var books: [Book] = getBooks()
+//    @State var books: [Book] = getBooks()
     
     // We want to test that when a book does not have a title we see an error,
     
@@ -33,14 +33,14 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            BookListView(books: $books)
+            BookListView()
                 .tabItem {
                     Label("Books", systemImage: "books.vertical.fill")
                 }
-            FavoritesView(books: $books)
-                .tabItem {
-                    Label("Favorites", systemImage: "heart.fill")
-                }
+//            FavoritesView(books: $books)
+//                .tabItem {
+//                    Label("Favorites", systemImage: "heart.fill")
+//                }
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")

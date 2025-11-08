@@ -14,7 +14,7 @@ import SwiftData
 class AddEditBookViewModel: ObservableObject { // let's the view observe this model and see changes
     
     private var bookToEdit: PersistentBook?
-    private var  modelContext: ModelContext
+    private var modelContext: ModelContext
     
     @Published var title: String = "" // Published will have all properties of a book
     @Published var author: String = ""
@@ -26,8 +26,8 @@ class AddEditBookViewModel: ObservableObject { // let's the view observe this mo
     @Published var isFavorite: Bool = false
     @Published var cover: UIImage? = nil
     
-    var navigationTitle: String {
-        return title.isEmpty ? "Add Book" : "Edit Book"
+    var sheetTitle: String {
+        bookToEdit == nil ? "Add Book" : "Edit Book"
     }
     
     var isSaveButtonDisabled: Bool {

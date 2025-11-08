@@ -8,16 +8,26 @@
 import SwiftUI
 
 struct BookListItem: View {
-    let bookInList: Book
+   
+    let book: PersistentBook
+    // var book: Book
+   
     
     var body: some View {
+        
+        
+        
         HStack{
-            Image(bookInList.image) // ??: is called nullish coalescing operator
+            Image(uiImage:
+                    (book.imageData != nil ? UIImage(data:book.imageData!) :
+                        UIImage(resource: .defaultbook))!
+                  )
                 .resizable()
                 .frame(width: 50, height: 70)
+                  
             VStack(alignment: .leading) {
-                Text(bookInList.title)
-                Text(bookInList.author != "" ? bookInList.author : "Anonymous")
+                Text(book.title)
+                Text(book.author ?? "Anonymous")
                     .font(.system(size: 12))
                     .foregroundColor(.secondary)
             }

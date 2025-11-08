@@ -7,17 +7,25 @@
 
 import SwiftUI
 
+
 struct DetailView: View {
-    
-    @Binding var book: Book
+    var book: PersistentBook
+    @State private var isFavorite: Bool = false
     @State private var showEditSheet: Bool = false
-    
+    @Environment(\.modelContext) private var modelContext
+    init(book: PersistentBook){
+        self.book = book
+        isFavorite = book.isFavorite
+    }
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 HStack{
                     // Coalescing operator (??) if left side is Nil do the right side
-                    Image(book.image)
+                    Image(uiImage:
+                            (book.imageData != nil ? UIImage(data:book.imageData!) :
+                                UIImage(resource: .defaultbook))!
+                          )
                         .resizable()
                         .scaledToFit()
                         .frame(width: 100, height: 150)
@@ -36,11 +44,13 @@ struct DetailView: View {
                     CustomCapsule(book.genre.rawValue, color: .secondary.opacity(0.3))
                     CustomCapsule(book.readingStatus.rawValue)
                     Spacer()
-                    FavoriteToggle(isFavorite: $book.isFavorite)
+                    FavoriteToggle(isFavorite: $isFavorite)
+                        .onChange(of: isFavorite){
+                            book.isFavorite = isFavorite
+                            try? modelContext.save()
+                        }
                 }
-                Text(book.description != "" ? book.description : "No description")
-                // Ternary operator (? :) if logical check is True, do after "?" else do after the ":"
-                // logical check ? do_this : do_that
+                Text(book.summary != "" ? book.summary : "No summary")
                 if(book.review != "" || book.rating > 0){
                     Text("My Review").font(.title3)
                     if(book.rating > 0){
@@ -51,13 +61,15 @@ struct DetailView: View {
             }
             .padding(.horizontal)
         }
-        .navigationTitle("Details") //Sets a title
-        .navigationBarTitleDisplayMode(.inline) // Changes the title to be smaller
+        .navigationTitle(book.title)
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(trailing: Button("Edit", action: {
             showEditSheet.toggle()
-        }))// sets a button on the top right corner with the text "Edit"
-        .sheet(isPresented: $showEditSheet, content: {
-            AddEditBookView(book: $book)
-        })  // presents a sheet whenever "$showEditSheet" is "true"
+        }))
+        .sheet(
+            isPresented: $showEditSheet,
+            content: {
+                AddEditBookView(book: book, modelContext: modelContext)
+            })
     }
 }

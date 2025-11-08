@@ -5,37 +5,39 @@
 //  Created by Jorge Gabriel Marin Urias on 10/25/25.
 //
 import SwiftUI
+import SwiftData
 
 struct BookListView: View {
     
-    @Binding var books: [Book]
+//    @Binding var books: [Book]
+    @Query var books: [PersistentBook]
+    @Environment(\.modelContext) private var modelContext
     @State var showAddSheet = false
-    @State var newBook: Book = Book(title:"")
     
-    @State var showFilterSheet: Bool = false
-    @State var selectedGenre: Genre?
-    @State var selectedReadingStatus: ReadingStatus?
+    @State private var showFilterSheet: Bool = false
+    @State private var selectedGenre: Genre?
+    @State private var selectedReadingStatus: ReadingStatus?
     
     // Computed Variable
-    private var filteredBooks: [Binding<Book>] {
-        $books.filter {
+    private var filteredBooks: [PersistentBook] {
+        books.filter {
             (
                 selectedGenre == nil
-                || $0.wrappedValue.genre == selectedGenre
+                || $0.genre == selectedGenre
             )
             && (
                 selectedReadingStatus == nil
-                || $0.wrappedValue.readingStatus == selectedReadingStatus
+                || $0.readingStatus == selectedReadingStatus
             )
         }
     }
     
     var body: some View {
         NavigationStack {
-            List(filteredBooks, id: \.self.id) { $book in
+            List(filteredBooks, id: \.id) { book in
                 // Each book will display the following:
-                NavigationLink(destination: DetailView(book: $book)){
-                    BookListItem(bookInList: book)
+                NavigationLink(destination: DetailView(book: book)){
+                    BookListItem(book: book)
                 }
             }
             .navigationBarTitle("Book Manager")
@@ -43,13 +45,8 @@ struct BookListView: View {
                 showAddSheet.toggle()
             }))// sets a button on the top right corner with the text "Edit"
             .sheet(isPresented: $showAddSheet){
-                //onDismiss
-                if !newBook.title.isEmpty {
-                    books.append(newBook)
-                }
-                newBook = Book(title:"")
             } content: {
-                AddEditBookView(book: $newBook)
+                AddEditBookView(modelContext: modelContext)
             }
             .toolbar{
                 ToolbarItem(placement: .topBarLeading){
