@@ -5,7 +5,7 @@
 ////  Created by Samantha Roman on 10/27/25.
 ////
 //
-//import SwiftUI
+import SwiftUI
 //
 //struct FavoritesView: View {
 //    @AppStorage(SETTINGS_GRID_COLUMNS_KEY) var gridColumns: Int = SETTINGS_GRID_COLUMNS_DEFAULT_VALUE
@@ -86,21 +86,21 @@
 //    }
 //}
 //
-//func filterFavorityBooks(
-//    books: Binding<[Book]>,
-//    selectedGenre: Genre?,
-//    selectedStatus: ReadingStatus?,
-//    isNegative: Bool? = false
-//) -> [Binding<Book>] {
-//    books.filter {
-//            $0.wrappedValue.isFavorite
-//            && (
-//                selectedGenre == nil
-//                || $0.wrappedValue.genre == selectedGenre
-//            )
-//            && (
-//                selectedStatus == nil
-//                || $0.wrappedValue.readingStatus == selectedStatus
-//            )
-//        }
-//}
+func filterFavorityBooks(
+    books: Binding<[Book]>,
+    selectedGenre: Genre?,
+    selectedStatus: ReadingStatus?,
+    isNegative: Bool? = false
+) -> [Binding<Book>] {
+    books.filter {
+            $0.wrappedValue.isFavorite
+            && (
+                selectedGenre == nil
+                || $0.wrappedValue.genre == selectedGenre
+            )
+            && (
+                selectedStatus == nil
+                || $0.wrappedValue.readingStatus == selectedStatus
+            )
+        }
+}
