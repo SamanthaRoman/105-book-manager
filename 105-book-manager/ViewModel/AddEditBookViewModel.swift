@@ -16,7 +16,8 @@ class AddEditBookViewModel: ObservableObject { // let's the view observe this mo
     private var bookToEdit: PersistentBook?
     private var modelContext: ModelContext
     
-    @Published var title: String = "" // Published will have all properties of a book
+    // the values you asign to each field. EX: String, Bool, Int. 
+    @Published var title: String = ""
     @Published var author: String = ""
     @Published var summary: String = ""
     @Published var rating: Int = 0
@@ -32,7 +33,7 @@ class AddEditBookViewModel: ObservableObject { // let's the view observe this mo
     
     var isSaveButtonDisabled: Bool {
         title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
-        (
+        (   // This checks values 
             title == bookToEdit?.title &&
             author == bookToEdit?.author &&
             summary == bookToEdit?.summary &&
