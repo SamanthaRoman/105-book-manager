@@ -7,7 +7,7 @@
 
 import Testing
 import SwiftData
-@testable import BookManager
+@testable import _05_book_manager
 
 @MainActor
 struct AddEditViewModelTests {
